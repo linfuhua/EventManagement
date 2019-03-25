@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Event Management System</title>
+    <link rel='stylesheet' href='/public/main.css' />
+    <link rel="stylesheet" href="/public/bootstrap/css/bootstrap.css">
+</head>
+<body>
+<nav class="navbar navbar-default  navbar-fixed-top">
+    <div class="container">
+        <div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#"><strong>Home</strong></a></li>
+                <li id="Search"><a href="javascript:void(0)">Search</a></li>
+                <li id="Create"><a href="javascript:void(0)">Create</a></li>
+                <li id="Admin"><a href="javascript:void(0)">Admin</a></li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+<div class="container ">
+    <div class="header">
+        <h1>Event Management System</h1>
+        <p>HKBU Event Management System is a web-based system for department and student societies to
+            broadcast events and activities as well as registration.
+        </p>
+    </div>
+</div>
+<div class="total">
+    <div class="content">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <div><h4 class="title"><strong style="color:#00ccff "><a href="javascript:void(0);" id="name1">Singing Contest</a></strong></h4></div>
+                    <ul class="nav nav-pills">
+                        <li><img src="/public/image/cat.jpg"></li>
+                        <li style="width: 340px">
+                            <p style="padding-left: 20px;overflow-y: auto;height:200px" id="des1">
+                              一年一度HKBU Singing Contest 又到了！身为大人你怎么可以错过！？无论你是谁、Bachelor/
+                            AD Promgramme，我们都欢迎你报名！身边有唱歌的人就更要推荐给他啦！
+                                详情可以打开Poster或去4报名Counter查询</p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <div><h4 class="title"><strong style="color:#00ccff "><a href="javascript:void(0);" id="name2">Culture and Politics in European Cinema</a></strong></h4></div>
+                    <ul class="nav nav-pills">
+                        <li><img src="/public/image/cat.jpg"></li>
+                        <li style="width: 340px">
+                            <p style="padding-left: 20px;overflow-y: auto;height:200px" id="des2">
+                                HKBU Event Management System is a web-based system for department and student societies to
+                                broadcast events and activities as well as registration.</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <div><h4 class="title"><strong style="color:#00ccff "><a href="javascript:void(0);" id="name3">Workshop on Design for Sustainability</a></strong></h4></div>
+                    <ul class="nav nav-pills">
+                        <li><img src="/public/image/cat.jpg"></li>
+                        <li style="width: 340px">
+                            <p style="padding-left: 20px;overflow-y: auto;height:200px" id="des3">
+                                HKBU Event Management System is a web-based system for department and student societies to
+                                broadcast events and activities as well as registration.</p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <div><h4 class="title"><strong style="color:#00ccff "><a href="javascript:void(0);" id="name4">Smarter Hong Kong,Smarter Living</a></strong></h4></div>
+                    <ul class="nav nav-pills">
+                        <li><img src="/public/image/cat.jpg"></li>
+                        <li style="width: 340px">
+                            <p style="padding-left: 20px;overflow-y: auto;height:200px" id="des4">
+                                HKBU Event Management System is a web-based system for department and student societies to
+                                broadcast events and activities as well as registration.</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="details" data-example-id="hoverable-table">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <h4 id="title"><strong>Singing Contest</strong></h4>
+                    <img src="/public/image/cat.jpg">
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                    <table class="table table-bordered">
+                        <tr><td id="fulldes"> 一年一度HKBU Singing Contest 又到了！身为大人你怎么可以错过！？无论你是谁、Bachelor/
+                            AD Promgramme，我们都欢迎你报名！身边有唱歌的人就更要推荐给他啦！
+                            详情可以打开Poster或去4报名Counter查询</td></tr>
+                        <tr><td><strong>Organizer:</strong><span>Department of Music</span></td></tr>
+                        <tr><td><strong>Date:</strong><span id="date"></span></td></tr>
+                        <tr><td><strong>Time:</strong><span id="time"></span></td></tr>
+                        <tr><td><strong>Venue:</strong><span>AC Hall</span></td></tr>
+                        <tr><td><strong>Quota:</strong><span>350</span></td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <span class="glyphicon glyphicon-remove pull-right"></span>
+    </div>
+</div>
+</body>
+<!--<script src="//apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>-->
+<script src="/public/js/jquery-3.3.1.min.js"></script>
+<script src="/public/bootstrap/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $.ajax({
+            type: 'post',
+            url:'/api/event/queryAll',
+            data: {
+            },
+            dataType : 'json',
+            success : function (response) {
+                var res = response.result;
+                $("#name1").text(res[0].name);
+                $("#des1").text(res[0].des);
+                $('#name2').text(res[1].name);
+                $('#des2').text(res[1].des);
+                $('#name3').text(res[2].name);
+                $('#des3').text(res[2].des);
+                $('#name4').text(res[3].name);
+                $('#des4').text(res[3].des+res[3].fulldes);
+            }
+        })
+    });
+
+
+    <!--页面的跳转-->
+    var url  = window.location.href;
+    $("#Search").click(function () {
+        $.get('/api/search',function (res) {
+            window.location.href = url + "api/search"
+        });
+    });
+    $("#Create").click(function () {
+        $.get('/api/create',function () {
+            window.location.href = url + "api/create"
+        });
+    });
+    $("#Admin").click(function () {
+        $.get('/api/admin',function () {
+            window.location.href = url + "api/admin"
+        });
+    });
+
+
+    <!--details查询-->
+    $('.title a').on('click',function () {
+        $('.details').addClass("show");
+        var name = $(this).text();
+        $('#title').text(name);
+        if(name=="Workshop on Design for Sustainability"){
+            name= "Workshop on Design";
+        }
+
+        $.ajax({
+            type: 'post',
+            url:'/api/event/queryFirst',
+            data: {
+                name :name
+            },
+            dataType : 'json',
+            success : function (response) {
+               var res = response.result;
+               $('#date').text(res.data);
+               $('#time').text(res.time);
+               $('#fulldes').text(res.des+res.fulldes);
+            }
+        })
+    });
+    $('.glyphicon-remove').on('click',function () {
+        $('.details').removeClass("show");
+    })
+
+</script>
+</html>

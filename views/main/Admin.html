@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Event Management System</title>
+    <link rel='stylesheet' href='/public/main.css' />
+    <link rel="stylesheet" href="/public/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="/public/bootstrap/css/bootstrap-datepicker.css">
+</head>
+<body>
+<nav class="navbar navbar-default  navbar-fixed-top">
+    <div class="container">
+        <div>
+            <ul class="nav navbar-nav">
+                <li><a href="/"><strong>Home</strong></a></li>
+                <li><a href="/api/search">Search</a></li>
+                <li><a href="/api/create">Create</a></li>
+                <li class="active"><a href="/api/admin">Admin</a></li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+<div class="container ">
+    <div class="header">
+        <h1>Event Management System</h1>
+        <p>HKBU Event Management System is a web-based system for department and student societies to
+            broadcast events and activities as well as registration.
+        </p>
+    </div>
+</div>
+<div class="" id="admin_div">
+    <table class="table table-hover" id="event_list">
+    </table>
+    <div class="container create_from">
+        <form class="form-horizontal">
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <label for="eventName">Event Name:</label>
+                        <input type="text" class="form-control" id="eventName">
+                    </div>
+                    <div class="form-group">
+                        <label for="shortDescription">Short Description:</label>
+                        <textarea class="form-control" id="shortDescription" rows="7"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="fullDescription">Full Description</label>
+                        <textarea class="form-control"  id="fullDescription" rows="11"></textarea>
+                    </div>
+                    <button type="button" class="btn btn-danger" id="delete">Delete</button>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <label for="Image">Image URL:</label>
+                        <input type="text" class="form-control" id="Image" disabled value="http://gis.hkbu.edu.hk/events/20150925-1023.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label for="Organizer">Organizer:</label>
+                        <select class="form-control" id="Organizer" disabled>
+                            <option readonly="readonly">Government and International Studies</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Event Date:</label>
+                        <input type="text" class="form-control" id="date1" placeholder=''>
+                    </div>
+                    <div class="form-group">
+                        <label for="Time">Time:</label>
+                        <input type="text" class="form-control" id="Time">
+                    </div>
+                    <div class="form-group">
+                        <label for="Venue">Venue:</label>
+                        <select class="form-control" id="Venue" disabled>
+                            <option readonly="readonly">SWT 501</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="Quota">Quota:</label>
+                        <input type="text" class="form-control" disabled id="Quota" value="80">
+                    </div>
+                    <div class="form-group checkbox">
+                        <label>
+                            <input type="checkbox" id="checkTop">HighLighted Event
+                        </label>
+                    </div><br/>
+                    <button type="button" class="btn btn-primary" id="update">Update</button>
+                </div>
+            </div>
+        </form>
+        <span class="glyphicon glyphicon-remove pull-right"></span>
+    </div>
+</div>
+</body>
+<script src="/public/js/jquery-3.3.1.min.js"></script>
+<script src="/public/bootstrap/js/bootstrap.min.js"></script>
+<script src="/public/bootstrap/js/bootstrap-datepicker.js"></script>
+<script src="/public/bootstrap/js/bootstrap-datepicker.zh-CN.min.js"></script>
+<script>
+//    $("#date1").datepicker({todayHighlight:true,todayBtn: 'linked'
+//        ,keyboardNavigation:true,autoclose:true,language:'zh-CN',format:'yyyy-mm-dd'
+//        ,daysOfWeekHighlighted:'0,6'});
+
+    $(document).ready(function(){
+        $.ajax({
+            type: 'post',
+            url:'/api/event/queryAll',
+            data: {
+            },
+            dataType : 'json',
+            success : function (response) {
+                var res = response.result;
+                var content;
+                var count = 49;
+                for(var i=0;i<res.length;i++){
+                    if(count%2==0){
+                        content += "<tr><th scope='row'>"+count+"</th><td><a class='admin_event' href='javascript:void(0)'>"+res[i].name+"</a></td>" +
+                            "<td></td><td></td></tr>";
+                    }
+                    if(count%2!=0){
+                        content += "<tr class='info'><th scope='row'>"+count+"</th><td><a class='admin_event' href='javascript:void(0)'>"+res[i].name+"</a></td>" +
+                            "<td></td><td></td></tr>";
+                    }
+                    count ++;
+                }
+                $("#event_list").append(content);
+            }
+        })
+    });
+
+    var name;
+    $('#event_list').on('click',"tr td a",function () {
+        $("#event_list").fadeOut();
+        $('.create_from').addClass(" show");
+        if(name){
+            name= $(this).text();
+        }else{
+            name=null;
+        }
+        $.ajax({
+            type: 'post',
+            url:'/api/event/queryFirst',
+            data: {
+                name :name
+            },
+            dataType : 'json',
+            success : function (response) {
+                var res = response.result;
+                $('#eventName').val(res.name);
+                $('#shortDescription').text(res.des);
+                $('#fullDescription').text(res.fulldes);
+                $('#date1').val(res.data);
+                $('#Time').val(res.time);
+                var top = res.top;
+                if(top=='1'){
+                    $('#checkTop').prop('checked',"checked")
+                }
+            }
+        })
+    });
+
+    $('.glyphicon-remove').on('click',function () {
+        $("#event_list").fadeIn();
+        $('.create_from').removeClass("show");
+    });
+
+
+//    删除操作
+    $("#delete").on("click",function () {
+        $.ajax({
+            type: 'post',
+            url:'/api/event/deleteEvent',
+            data: {
+                name :name
+            },
+            dataType : 'json',
+            success : function (res) {
+                if(res.status == '0'){
+                    alert(res.result);
+                    $("#event_list").fadeIn();
+                    $('.create_from').removeClass("show");
+                    window.location.reload()
+                }
+            }
+        })
+    });
+
+//  更新操作
+    $("#update").on('click',function () {
+        var newName= $('#eventName').val();
+        var newDes= $('#shortDescription').val();
+        var newFulldes= $('#fullDescription').val();
+        var newDate= $('#date1').val();
+        var newTime= $('#Time').val();
+        var newTop ;
+        if( $('#checkTop').prop('checked')){
+            newTop = '1'
+        }else{
+            newTop = '0'
+        }
+        $.ajax({
+            type: 'post',
+            url:'/api/event/updateEvent',
+            data: {
+                name :name,
+                newName :newName,
+                newDes :newDes,
+                newFulldes :newFulldes,
+                newDate :newDate,
+                newTime :newTime,
+                newTop :newTop
+            },
+            dataType : 'json',
+            success : function (res) {
+                if(res.status == '0'){
+                    alert(res.result);
+                    $("#event_list").fadeIn();
+                    $('.create_from').removeClass("show");
+                    window.location.reload()
+                }
+            }
+        })
+    })
+</script>
+</html>
